@@ -114,7 +114,7 @@ namespace Homework_Assignment_1___Cpts321
             Console.WriteLine("Number of levels: " + InputTree.depth);
 
             double minLevels = Math.Ceiling(Math.Log((double)InputTree.count + 1, 2) - 1);
-            Console.Write("Minimum number of levels that a tree with " + InputTree.count + " nodes could have = " + (minLevels + 1) + "\n");
+            Console.Write("Minimum number of levels that a tree with " + InputTree.count + " nodes could have: " + (minLevels + 1) + "\n");
         }
     }
 }
