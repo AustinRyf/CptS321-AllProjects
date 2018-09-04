@@ -30,25 +30,27 @@ class BinarySearchTree
         count = 0;
     }
 
+    //Will insert a node into a tree based on the value of the node
     public void InsertNode(int nodeValue, ref BSTNode node)
     {
+        //If there is no node in the current spot, place a new node there
         if (node == null)
         {
             node = new BSTNode(nodeValue);
             count++;
         }
-
+        //If there is already a node of the same value, return
         else if (nodeValue == node.value)
         {
             return;
         }
-
+        //If the node is greater than the current node, move right
         else if (nodeValue > node.value)
         {
             InsertNode(nodeValue, ref node.rightChild);
             tempDepth++;
         }
-
+        //If the node is less than the current node, move left
         else if (nodeValue < node.value)
         {
             InsertNode(nodeValue, ref node.leftChild);
@@ -56,6 +58,7 @@ class BinarySearchTree
         }
     }
 
+    //Traversal that will print out the list of nodes from least to greatest
     public void InOrder(ref BSTNode node)
     {
         if (node.leftChild != null)
@@ -88,19 +91,21 @@ namespace Homework_Assignment_1___Cpts321
 
             userInput = Console.ReadLine();
 
-
+            //Will split the user enetered string into an array of strings
             stringArray = userInput.Split(' ');
+            //The loop will iterate for every string in the array
             foreach (string i in stringArray)
             {
+                //Will convert the character into an integer and enter it into an array of numbers
                 numberList.Add(int.Parse(i));
             }
-
+            //The loop will iterate for every integer in the array
             foreach (int j in numberList)
             {
                 InputTree.tempDepth = 1;
-
+                //Inserts the current number into the tree as a node
                 InputTree.InsertNode(j, ref InputTree.root);
-
+                //Depth counter
                 if (InputTree.tempDepth > InputTree.depth)
                 {
                     InputTree.depth = InputTree.tempDepth;
