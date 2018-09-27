@@ -1,81 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-class BSTNode
-{
-    public int value;
-    public BSTNode leftChild;
-    public BSTNode rightChild;
-
-    //Creates node when called and inserts number into it
-    public BSTNode(int userNum)
-    {
-        value = userNum;
-        leftChild = null;
-        rightChild = null;
-    }
-}
-
-class BinarySearchTree
-{
-    public BSTNode root;
-    public int count;
-    public int depth = 1;
-    public int tempDepth = 1;
-
-    //Creates tree when called and sets a root so inserting can begin
-    public BinarySearchTree()
-    {
-        root = null;
-        count = 0;
-    }
-
-    //Will insert a node into a tree based on the value of the node
-    public void InsertNode(int nodeValue, ref BSTNode node)
-    {
-        //If there is no node in the current spot, place a new node there
-        if (node == null)
-        {
-            node = new BSTNode(nodeValue);
-            count++;
-        }
-        //If there is already a node of the same value, return
-        else if (nodeValue == node.value)
-        {
-            return;
-        }
-        //If the node is greater than the current node, move right
-        else if (nodeValue > node.value)
-        {
-            InsertNode(nodeValue, ref node.rightChild);
-            tempDepth++;
-        }
-        //If the node is less than the current node, move left
-        else if (nodeValue < node.value)
-        {
-            InsertNode(nodeValue, ref node.leftChild);
-            tempDepth++;
-        }
-    }
-
-    //Traversal that will print out the list of nodes from least to greatest
-    public void InOrder(ref BSTNode node)
-    {
-        if (node.leftChild != null)
-        {
-            InOrder(ref node.leftChild);
-        }
-
-        Console.Write(node.value + " ");
-
-        if (node.rightChild != null)
-        {
-            InOrder(ref node.rightChild);
-        }
-    }
-}
-
-namespace Homework_Assignment_1___Cpts321
+namespace BST_Homework
 {
     class Program
     {
@@ -85,7 +11,7 @@ namespace Homework_Assignment_1___Cpts321
             string[] stringArray;
             List<int> numberList = new List<int>() { };
 
-            BinarySearchTree InputTree = new BinarySearchTree { };
+            BinarySearchTree<int> InputTree = new BinarySearchTree<int> { };
 
             Console.Write("Enter a collection of numbers in the range [0, 100], seperated by spaces: ");
 
@@ -104,7 +30,7 @@ namespace Homework_Assignment_1___Cpts321
             {
                 InputTree.tempDepth = 1;
                 //Inserts the current number into the tree as a node
-                InputTree.InsertNode(j, ref InputTree.root);
+                InputTree.InsertPublic(j);
                 //Depth counter
                 if (InputTree.tempDepth > InputTree.depth)
                 {
@@ -112,9 +38,18 @@ namespace Homework_Assignment_1___Cpts321
                 }
             }
 
-            Console.Write("Tree Contents: ");
-            InputTree.InOrder(ref InputTree.root);
+            Console.Write("InOrder Tree Contents: ");
+            InputTree.InOrderPublic();
             Console.WriteLine("");
+
+            Console.Write("PreOrder Tree Contents: ");
+            InputTree.PreOrderPublic();
+            Console.WriteLine("");
+
+            Console.Write("PostOrder Tree Contents: ");
+            InputTree.PostOrderPublic();
+            Console.WriteLine("");
+
             Console.WriteLine("Number of items: " + InputTree.count);
             Console.WriteLine("Number of levels: " + InputTree.depth);
 
