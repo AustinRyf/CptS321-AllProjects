@@ -3770,11 +3770,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Austin\\source\\repos\\Spreadsheet Homework\\SpreadsheetEngine\\SpreadsheetEngine.csproj",
+      "projectUniqueName": "C:\\Users\\Austin\\cs321-aryf\\Spreadsheet\\Spreadsheet Homework\\SpreadsheetEngine\\SpreadsheetEngine.csproj",
       "projectName": "SpreadsheetEngine",
-      "projectPath": "C:\\Users\\Austin\\source\\repos\\Spreadsheet Homework\\SpreadsheetEngine\\SpreadsheetEngine.csproj",
+      "projectPath": "C:\\Users\\Austin\\cs321-aryf\\Spreadsheet\\Spreadsheet Homework\\SpreadsheetEngine\\SpreadsheetEngine.csproj",
       "packagesPath": "C:\\Users\\Austin\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Austin\\source\\repos\\Spreadsheet Homework\\SpreadsheetEngine\\obj\\",
+      "outputPath": "C:\\Users\\Austin\\cs321-aryf\\Spreadsheet\\Spreadsheet Homework\\SpreadsheetEngine\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Austin\\AppData\\Roaming\\NuGet\\NuGet.Config",
