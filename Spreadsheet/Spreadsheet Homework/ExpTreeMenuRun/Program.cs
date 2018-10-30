@@ -15,7 +15,9 @@ namespace ExpTreeConsole
             bool cont = true;
 
             //Create a default expression tree
-            ExpTree userTree = new ExpTree("Hello*2*World");
+            //ExpTree userTree = new ExpTree("Hello*2*World");
+            //ExpTree userTree = new ExpTree("4+18/(9-3)");
+            ExpTree userTree = new ExpTree("73 - 12 / (5 * 2) + 10");
 
             //While the user doesn't select quit
             while (cont)
@@ -55,7 +57,9 @@ namespace ExpTreeConsole
 
                     case 3:
                         //Evaluates the expression tree
-                        Console.WriteLine(userTree.Eval());
+                        Console.Write("Tree Evaluates To: ");
+                        Console.Write(userTree.Eval());
+                        Console.WriteLine();
                         Console.WriteLine();
 
                         cont = true;

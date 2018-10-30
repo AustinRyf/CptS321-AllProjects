@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Text;
 
 namespace CptS321
@@ -21,8 +22,10 @@ namespace CptS321
         {
             //Cleares out any variables from previous expression trees
             variableDictionary.Clear();
+
             //Sets new expression
             this.userExpression = expression;
+
             //Creates the tree from the expression
             CreateExpTree(userExpression);
         }
@@ -30,81 +33,138 @@ namespace CptS321
         private Node CreateExpTree(string expression)
         {
             double valueNode;
-            //Post Order walk through
-            for (int i = expression.Length - 1; i >= 0; i--)
+            
+            Stack<Node> treeStack = new Stack<Node>();
+            Stack<string> operatorStack = new Stack<string>();
+            Queue<string> outputQueue = new Queue<string>();
+
+            var allTokens = new List<string>();
+            //The characters that will be used to seperate the expression into tokens (-,+,/,*,(,),^)
+            string seperateAt = @"([-/\+\*\(\)\^])";
+            Regex regex = new Regex(seperateAt);
+
+            //Splits the expression into tokens
+            foreach (string token in regex.Split(expression))
             {
-                //All of these work in Post Order
-                if (expression[i] == '+')
+                allTokens.Add(token);
+            }
+
+            //Removes null space and whitespace
+            for (int i = 0; i < allTokens.Count; i++)
+            {
+                if (allTokens[i] == "" || allTokens[i] == " ")
                 {
-                    operationNode currentNodePlus = new operationNode(expression[i]);
-
-                    if (root == null)
-                    {
-                        root = currentNodePlus;
-                    }
-
-                    currentNodePlus.leftChild = CreateExpTree(expression.Substring(0, i));
-                    currentNodePlus.rightChild = CreateExpTree(expression.Substring(i + 1));
-
-                    return currentNodePlus;
-                }
-
-                else if (expression[i] == '-')
-                {
-                    operationNode currentNodeMin = new operationNode(expression[i]);
-
-                    if (root == null)
-                    {
-                        root = currentNodeMin;
-                    }
-
-                    currentNodeMin.leftChild = CreateExpTree(expression.Substring(0, i));
-                    currentNodeMin.rightChild = CreateExpTree(expression.Substring(i + 1));
-
-                    return currentNodeMin;
-                }
-
-                else if (expression[i] == '*')
-                {
-                    operationNode currentNodeMult = new operationNode(expression[i]);
-
-                    if (root == null)
-                    {
-                        root = currentNodeMult;
-                    }
-
-                    currentNodeMult.leftChild = CreateExpTree(expression.Substring(0, i));
-                    currentNodeMult.rightChild = CreateExpTree(expression.Substring(i + 1));
-
-                    return currentNodeMult;
-                }
-
-                else if (expression[i] == '/')
-                {
-                    operationNode currentNodeDiv = new operationNode(expression[i]);
-
-                    if (root == null)
-                    {
-                        root = currentNodeDiv;
-                    }
-
-                    currentNodeDiv.leftChild = CreateExpTree(expression.Substring(0, i));
-                    currentNodeDiv.rightChild = CreateExpTree(expression.Substring(i + 1));
-
-                    return currentNodeDiv;
+                    allTokens.Remove(allTokens[i]);
                 }
             }
-            //If the parsing of the expression for a "valueNode", create and return valueNode
-            if (double.TryParse(expression, out valueNode))
+
+            //Shunting Yard Algorithm (found algorithm @ https://brilliant.org/wiki/shunting-yard-algorithm/)
+            foreach (string token in allTokens)
             {
-                valueNode currentValueNode = new valueNode(valueNode);
-                return currentValueNode;
+                //For handling parenthesis, if the token is a ), everything in the operator stack will be put into the output queue until it reaches a (
+                if (token == ")")
+                {
+                    while (operatorStack.Peek() != "(")
+                    {
+                        outputQueue.Enqueue(operatorStack.Pop());
+                    }
+                    operatorStack.Pop();
+                }
+                
+                else if (token == "(")
+                {
+                    operatorStack.Push(token);
+                }
+
+                //For handling different operator, checks order of operations precedence and will move from stack to queue as needed
+                else if (token == "+" || token == "-" || token == "*" || token == "/" || token == "^")
+                {
+                    while (operatorStack.Count != 0 && OrderOfOperations(token) <= OrderOfOperations(operatorStack.Peek()))
+                    {
+                        outputQueue.Enqueue(operatorStack.Pop());
+                    }
+
+                    operatorStack.Push(token);
+                }
+
+                //For handling variables and values
+                else
+                {
+                    outputQueue.Enqueue(token);
+                }
             }
-            //Otherwise create and return a variableNode
+
+            //Moves any operators left on the stack to the output queue
+            while (operatorStack.Count > 0)
+            {
+                outputQueue.Enqueue(operatorStack.Pop());
+            }
+
+            //Builds the tree from the output queue
+            foreach (string token in outputQueue)
+            {
+                //If the token is an operator, assign its children and push it to the tree stack
+                if (token == "+" || token == "-" || token == "*" || token == "/" || token == "^")
+                {
+                    operationNode currentOpNode = new operationNode(token[0]);
+
+                    currentOpNode.rightChild = treeStack.Pop();
+                    currentOpNode.leftChild = treeStack.Pop();
+
+                    treeStack.Push(currentOpNode);
+                }
+
+                //If the token is a value, parse it and push it to the tree stack
+                else if (double.TryParse(token, out valueNode))
+                {
+                    valueNode currentValueNode = new valueNode(valueNode);
+
+                    treeStack.Push(currentValueNode);
+                }
+
+                //If the token is a variable, push it to the tree stack
+                else
+                {
+                    variableNode currentVariableNode = new variableNode(token);
+                    treeStack.Push(currentVariableNode);
+                }
+            }
+            //Assign the root to the top of the stack
+            root = treeStack.Pop();
+            return root;
+        }
+
+        //Order of operations precedence
+        private int OrderOfOperations(string op)
+        {
+            if (op == "+")
+            {
+                return 2;
+            }
+
+            else if (op == "-")
+            {
+                return 2;
+            }
+
+            else if (op == "*")
+            {
+                return 3;
+            }
+
+            else if (op == "/")
+            {
+                return 3;
+            }
+
+            else if (op == "^")
+            {
+                return 4;
+            }
+
             else
             {
-                variableNode currentVariableNode = new variableNode(expression);
-                return currentVariableNode;
+                return -1;
             }
         }
 
@@ -127,7 +187,7 @@ namespace CptS321
             {
                 switch(operation)
                 {
-                    //Adds/Subtracts/Multiplies/Divides the children of the operationNode
+                    //Adds, Subtracts, Multiplies, Divides, or Powers the children of the operationNode
                     case '+':
                         return this.leftChild.Eval() + this.rightChild.Eval();
 
@@ -139,6 +199,9 @@ namespace CptS321
 
                     case '/':
                         return this.leftChild.Eval() / this.rightChild.Eval();
+
+                    case '^':
+                        return Math.Pow(this.leftChild.Eval(),this.rightChild.Eval());
 
                     default:
                         return 0.0;
