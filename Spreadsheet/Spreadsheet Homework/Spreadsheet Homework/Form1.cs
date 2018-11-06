@@ -17,6 +17,7 @@ namespace Spreadsheet_Homework
     {
         //Creates spreadsheet with 50 rows and 26 columns
         private Spreadsheet spreadSheetView = new Spreadsheet(50, 26);
+        private Cell clickedCell;
 
         public Form1()
         {
@@ -32,6 +33,57 @@ namespace Spreadsheet_Homework
             {
                 dataGridView1.Rows[cell.RowIndex].Cells[cell.ColumnIndex].Value = cell.Value;
             }
+        }
+
+        //Adds the value of the cell to the winforms app as a string
+        private void EndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            if (dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value != null)
+            {
+                spreadSheetView.GetCell(e.RowIndex, e.ColumnIndex).Text = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
+            }
+
+            else
+            {
+                spreadSheetView.GetCell(e.RowIndex, e.ColumnIndex).Text = "";
+            }
+        }
+
+        //When the user leaves the text box the cell will be updated
+        private void textBox1_Leave(object sender, EventArgs e)
+        {
+            dataGridView1.Rows[clickedCell.RowIndex].Cells[clickedCell.ColumnIndex].Value = textBox1.Text;
+            EndEdit(dataGridView1, new DataGridViewCellEventArgs(clickedCell.ColumnIndex, clickedCell.RowIndex));
+        }
+
+        //When the user presses enter when using the text box, the cell will be updated
+        private void textBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+
+            if (e.KeyCode == Keys.Return)
+            {
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+                textBox1_Leave(sender, new EventArgs());
+            }
+        }
+
+        //Needed for textBox1_KeyDown
+        private void textBox1_KeyUp(object sender, KeyEventArgs e)
+        {
+
+            if (e.KeyCode == Keys.Return)
+            {
+                e.Handled = false;
+                e.SuppressKeyPress = false;
+            }
+        }
+
+        //When a cell is clicked, the text box will update to show that cell's text
+        private void dataGridView1_CellEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            clickedCell = spreadSheetView.GetCell(e.RowIndex, e.ColumnIndex);
+            textBox1.Text = clickedCell.Text;
         }
 
         //Creates the visual spreadsheet with columns A-Z and rows 1-50
@@ -58,12 +110,13 @@ namespace Spreadsheet_Homework
             {
                 row.HeaderCell.Value = (row.Index + 1).ToString();
             }
-        }
 
-        //Runs the demo when the button is clicked
-        private void button1_Click(object sender, EventArgs e)
-        {
-            spreadSheetView.ButtonDemo();
+            //User events
+            dataGridView1.CellEnter += new DataGridViewCellEventHandler(dataGridView1_CellEnter);
+            dataGridView1.CellEndEdit += new DataGridViewCellEventHandler(EndEdit);
+            textBox1.Leave += textBox1_Leave;
+            textBox1.KeyDown += new KeyEventHandler(textBox1_KeyDown);
+            textBox1.KeyUp += new KeyEventHandler(textBox1_KeyUp);
         }
     }
 }

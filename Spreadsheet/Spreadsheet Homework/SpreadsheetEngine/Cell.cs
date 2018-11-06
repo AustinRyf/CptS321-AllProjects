@@ -15,11 +15,7 @@ namespace CptS321
         //Notifies if the text of a cell has been changed
         protected void OnPropertyChanged(string hText)
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(hText));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(hText));
         }
 
         //Cell constructor
@@ -53,7 +49,7 @@ namespace CptS321
         public string Text
         {
             get { return text; }
-            protected internal set
+            set
             {
                 text = value;
                 OnPropertyChanged("Text");
@@ -73,7 +69,7 @@ namespace CptS321
                 else
                 {
                     this.value = value;
-                    PropertyChanged(this, new PropertyChangedEventArgs("Value"));
+                    OnPropertyChanged("Value");
                 }
             }
         }

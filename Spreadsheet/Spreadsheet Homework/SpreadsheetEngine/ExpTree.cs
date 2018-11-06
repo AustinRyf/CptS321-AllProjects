@@ -9,7 +9,7 @@ namespace CptS321
     {
         private Node root;
         //Creates the variable dictionary
-        public static Dictionary<string, double> variableDictionary = new Dictionary<string, double> { };
+        private static Dictionary<string, double> variableDictionary = new Dictionary<string, double> { };
         public string userExpression;
 
         //Abstract node class that can be inherited by the different types of nodes
@@ -17,7 +17,7 @@ namespace CptS321
         {
             public abstract double Eval();
         }
-        
+
         public ExpTree(string expression)
         {
             //Cleares out any variables from previous expression trees
@@ -127,6 +127,10 @@ namespace CptS321
                 {
                     variableNode currentVariableNode = new variableNode(token);
                     treeStack.Push(currentVariableNode);
+                    if (!variableDictionary.ContainsKey(token))
+                    {
+                        variableDictionary.Add(token, 0.0);
+                    }
                 }
             }
             //Assign the root to the top of the stack
@@ -243,17 +247,23 @@ namespace CptS321
             }
         }
 
+        //Returns variables for use in dependencies in the Spreadsheet class
+        public List<string> getVarNames()
+        {
+            return new List<string>(variableDictionary.Keys);
+        }
+
         //Takes in a string and a double and enters them into the variable dictionary if they aren't already in it
         public void SetVar(string varName, double varValue)
         {
             if (variableDictionary.ContainsKey(varName))
             {
-                return;
+                variableDictionary[varName] = varValue;
             }
 
             else
             {
-                variableDictionary[varName] = varValue;
+                variableDictionary.Add(varName, varValue);
             }
         }
 
