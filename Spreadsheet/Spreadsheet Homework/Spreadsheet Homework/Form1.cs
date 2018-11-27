@@ -124,10 +124,10 @@ namespace Spreadsheet_Homework
         {
             OpenFileDialog loadFromFile = new OpenFileDialog();
             loadFromFile.Filter = "XML File (*.xml)|*.xml";
-            
+
             if (loadFromFile.ShowDialog() == DialogResult.OK)
             {
-                emptySpreadsheet();
+                clearSpreadsheet();
 
                 FileStream loadStream = new FileStream(loadFromFile.FileName, FileMode.Open, FileAccess.Read);
 
@@ -155,7 +155,7 @@ namespace Spreadsheet_Homework
             new Form2().Show();
         }
 
-        private void emptySpreadsheet()
+        public void clearSpreadsheet()
         {
             for (int row = 0; row < 50; ++row)
             {

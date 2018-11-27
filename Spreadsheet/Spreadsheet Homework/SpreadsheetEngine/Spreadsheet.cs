@@ -187,7 +187,9 @@ namespace CptS321
 
         public void SpreadsheetLoad(Stream fileStream)
         {
-            clearSpreadsheet();
+            int row = 0;
+            int col = 0;
+            string text = "";
 
             XDocument doc = XDocument.Load(fileStream);
 
@@ -195,20 +197,12 @@ namespace CptS321
             {
                 foreach (XElement cell in spreadsheet.Nodes())
                 {
-                    int row = Int32.Parse((string)cell.Attribute("row"));
-                    int col = Int32.Parse((string)cell.Attribute("column"));
-                    string text = (string)cell.Element("text");
+                    row = Int32.Parse((string)cell.Attribute("row"));
+                    col = Int32.Parse((string)cell.Attribute("column"));
+                    text = (string)cell.Element("text");
 
                     createdSpreadsheet[row, col].Text = text;
                 }
-            }
-        }
-
-        private void clearSpreadsheet()
-        {
-            foreach (Cell cell in createdSpreadsheet)
-            {
-                cell.Text = "";
             }
         }
         
