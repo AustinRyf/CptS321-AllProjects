@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using CptS321;
+using System.IO;
 
 namespace Spreadsheet_Homework
 {
@@ -117,6 +118,52 @@ namespace Spreadsheet_Homework
             textBox1.Leave += textBox1_Leave;
             textBox1.KeyDown += new KeyEventHandler(textBox1_KeyDown);
             textBox1.KeyUp += new KeyEventHandler(textBox1_KeyUp);
+        }
+
+        private void loadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog loadFromFile = new OpenFileDialog();
+            loadFromFile.Filter = "XML File (*.xml)|*.xml";
+            
+            if (loadFromFile.ShowDialog() == DialogResult.OK)
+            {
+                emptySpreadsheet();
+
+                FileStream loadStream = new FileStream(loadFromFile.FileName, FileMode.Open, FileAccess.Read);
+
+                spreadSheetView.SpreadsheetLoad(loadStream);
+
+                loadStream.Close();
+            }
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Stream fileStream;
+            SaveFileDialog saveToFile = new SaveFileDialog();
+            saveToFile.Filter = "XML File (*.xml)|*.xml";
+
+            if (saveToFile.ShowDialog() == DialogResult.OK)
+            {
+                fileStream = saveToFile.OpenFile();
+                spreadSheetView.SpreadsheetSave(fileStream);
+            }
+        }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new Form2().Show();
+        }
+
+        private void emptySpreadsheet()
+        {
+            for (int row = 0; row < 50; ++row)
+            {
+                for (int col = 0; col < 26; ++col)
+                {
+                    spreadSheetView.GetCell(row, col).Text = "";
+                }
+            }
         }
     }
 }

@@ -24,3 +24,4 @@ C:\Users\Austin\cs321-aryf\Spreadsheet\Spreadsheet Homework\Spreadsheet Homework
 C:\Users\Austin\cs321-aryf\Spreadsheet\Spreadsheet Homework\Spreadsheet Homework\obj\Debug\Spreadsheet Homework.csproj.CopyComplete
 C:\Users\Austin\cs321-aryf\Spreadsheet\Spreadsheet Homework\Spreadsheet Homework\obj\Debug\Spreadsheet Homework.exe
 C:\Users\Austin\cs321-aryf\Spreadsheet\Spreadsheet Homework\Spreadsheet Homework\obj\Debug\Spreadsheet Homework.pdb
+C:\Users\Austin\cs321-aryf\Spreadsheet\Spreadsheet Homework\Spreadsheet Homework\obj\Debug\Spreadsheet_Homework.Form2.resources

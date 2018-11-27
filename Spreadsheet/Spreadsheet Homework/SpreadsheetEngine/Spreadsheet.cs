@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
+using System.IO;
+using System.Xml.Linq;
 
 namespace CptS321
 {
@@ -54,25 +56,50 @@ namespace CptS321
         //If the value of the cell is an equation, the text will be presented as the evaluated equation
         public void SSPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if(e.PropertyName == "Text")
+            Cell cell = (Cell)sender;
+
+            if (e.PropertyName == "Text")
             {
-                if (cellDependencies.ContainsKey((Cell)sender))
+                try
                 {
-                    cellDependencies[(Cell)sender].Clear();
+                    if (cell.Text == "")
+                    {
+                        cell.Value = "";
+                    }
+
+                    else if (cell.Text.StartsWith("="))
+                    {
+                        evaluateCellDepTree(cell);
+                    }
+
+                    else
+                    {
+                        cell.Value = cell.Text;
+                    }
                 }
 
-                cellDependencies.Remove((Cell)sender);
+                catch (Exception ex)
+                {
 
-                evaluateCellDepTree((Cell)sender);
+                }
+
+                CPropertyChanged?.Invoke(sender, new PropertyChangedEventArgs("Value"));
             }
 
-            //If a cell changes and has other cells relying on it, this will change the effected cells
-            else
+            else if (e.PropertyName == "Value")
             {
-                cellsRelyingOn((Cell)sender);
-            }
+                try
+                {
+                    cellsRelyingOn(cell);
+                }
 
-            CPropertyChanged?.Invoke(sender, new PropertyChangedEventArgs("Value"));
+                catch (Exception ex)
+                {
+
+                }
+
+                CPropertyChanged?.Invoke(sender, new PropertyChangedEventArgs("Value"));
+            }
         }
         
         public void evaluateCellDepTree(Cell currentCell)
@@ -134,6 +161,54 @@ namespace CptS321
                 {
                     evaluateCellDepTree(parentCell);
                 }
+            }
+        }
+
+        public void SpreadsheetSave(Stream fileStream)
+        {
+            XDocument doc = new XDocument();
+            XElement XMLspreadsheet = new XElement("spreadsheet");
+
+            foreach (Cell cell in createdSpreadsheet)
+            {
+                    if (cell.Text != "")
+                    {
+                        XMLspreadsheet.Add(
+                            new XElement("cell",
+                                new XAttribute("row", cell.RowIndex),
+                                new XAttribute("column", cell.ColumnIndex),
+                                new XElement("text", this.createdSpreadsheet[cell.RowIndex, cell.ColumnIndex].Text)));
+                    }
+            }
+
+            doc.Add(XMLspreadsheet);
+            doc.Save(fileStream);
+        }
+
+        public void SpreadsheetLoad(Stream fileStream)
+        {
+            clearSpreadsheet();
+
+            XDocument doc = XDocument.Load(fileStream);
+
+            foreach (XElement spreadsheet in doc.Nodes())
+            {
+                foreach (XElement cell in spreadsheet.Nodes())
+                {
+                    int row = Int32.Parse((string)cell.Attribute("row"));
+                    int col = Int32.Parse((string)cell.Attribute("column"));
+                    string text = (string)cell.Element("text");
+
+                    createdSpreadsheet[row, col].Text = text;
+                }
+            }
+        }
+
+        private void clearSpreadsheet()
+        {
+            foreach (Cell cell in createdSpreadsheet)
+            {
+                cell.Text = "";
             }
         }
         
