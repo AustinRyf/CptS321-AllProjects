@@ -1,0 +1,7 @@
+C:\Users\Austin\source\repos\Threaded Merge Sort\Threaded Merge Sort\obj\Debug\Threaded Merge Sort.csprojAssemblyReference.cache
+C:\Users\Austin\source\repos\Threaded Merge Sort\Threaded Merge Sort\obj\Debug\Threaded Merge Sort.csproj.CoreCompileInputs.cache
+C:\Users\Austin\source\repos\Threaded Merge Sort\Threaded Merge Sort\bin\Debug\Threaded Merge Sort.exe.config
+C:\Users\Austin\source\repos\Threaded Merge Sort\Threaded Merge Sort\bin\Debug\Threaded Merge Sort.exe
+C:\Users\Austin\source\repos\Threaded Merge Sort\Threaded Merge Sort\bin\Debug\Threaded Merge Sort.pdb
+C:\Users\Austin\source\repos\Threaded Merge Sort\Threaded Merge Sort\obj\Debug\Threaded Merge Sort.exe
+C:\Users\Austin\source\repos\Threaded Merge Sort\Threaded Merge Sort\obj\Debug\Threaded Merge Sort.pdb
